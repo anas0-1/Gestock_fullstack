@@ -61,7 +61,7 @@
           </button>
         </div>
         <div class="mt-4 text-center">
-          <p class="text-base">Already have an account? <router-link to="/login" class="text-indigo-600">Login here</router-link></p>
+          <p class="text-base">Already have an account? <router-link to="/" class="text-indigo-600">Login here</router-link></p>
         </div>
       </form>
     </div>
@@ -71,7 +71,7 @@
 <script>
 import { mapActions } from 'vuex';
 
-const backgroundImage = require('@/assets/hero-stock.png'); // Import the image
+const backgroundImage = require('@/assets/hero-stock.png'); 
 
 export default {
   data() {
@@ -97,7 +97,7 @@ export default {
           password: this.password, 
           password_confirmation: this.password_confirmation 
         });
-        this.$router.push('/login'); // Redirect to login after successful registration
+        this.$router.push('/'); 
       } catch (error) {
         alert('Registration failed: ' + error.message);
       }
@@ -115,7 +115,7 @@ export default {
 }
 .custom-border {
   position: relative;
-  overflow: hidden; /* Ensures pseudo-elements do not overflow */
+  overflow: hidden; 
 }
 
 .custom-border::before {
@@ -126,8 +126,8 @@ export default {
   right: 0;
   bottom: 0;
   border: 4px solid rgb(139, 92, 246);
-  border-radius: 1.5rem; /* Adjust to match rounded-3xl */
-  box-sizing: border-box; /* Ensures border thickness is included in dimensions */
+  border-radius: 1.5rem; 
+  box-sizing: border-box; 
   clip-path: polygon(
     0% 0%, 
     77% 0%, 
@@ -135,6 +135,6 @@ export default {
     0% 77%, 
     0% 0%
   );
-  z-index: 0; /* Ensure the pseudo-element is behind the form */
+  z-index: 0; 
 }
 </style>

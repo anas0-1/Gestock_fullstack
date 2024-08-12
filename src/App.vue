@@ -1,5 +1,7 @@
 <template>
-  <router-view />
+  <div id="app">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
@@ -9,5 +11,5 @@ export default {
 </script>
 
 <style>
-/* Add global styles if needed */
+/* Your global styles here */
 </style>

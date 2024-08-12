@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import axios from 'axios';
 
 const backgroundImage = require('@/assets/hero-stock.png'); // Import the image
 
@@ -62,18 +62,42 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['login']),
-    async handleLogin() {
-      try {
-        await this.login({ email: this.email, password: this.password });
-        this.$router.push('/'); // Redirect to a dashboard or home page after login
-      } catch (error) {
-        alert('Login failed: ' + error.message);
+  async handleLogin() {
+    try {
+      // Send login request
+      const response = await axios.post('http://localhost:8000/api/login', {
+        email: this.email,
+        password: this.password
+      });
+
+      // Store token
+      const { access_token, token_type } = response.data;
+      localStorage.setItem('authToken', access_token);
+      axios.defaults.headers.common['Authorization'] = `${token_type} ${access_token}`;
+
+      // Fetch user profile using the accessible endpoint
+      const userProfileResponse = await axios.get('http://localhost:8000/api/user');
+      const userProfile = userProfileResponse.data;
+
+      // Redirect based on role
+      if (userProfile.role === 'admin') {
+        this.$router.push('/AdminDashboard');
+      } else if (userProfile.role === 'user') {
+        this.$router.push('/UserDashboard');
+      } else {
+        this.$router.push('/'); // Default redirect if role is unknown
       }
+
+    } catch (error) {
+      console.error('Login failed:', error.response ? error.response.data.message : error.message);
+      alert('Login failed: ' + (error.response ? error.response.data.message : error.message));
     }
   }
+}
+
 };
 </script>
+
 
 <style scoped>
 .bg-cover {
