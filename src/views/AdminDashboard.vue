@@ -36,7 +36,11 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await axios.get('http://localhost:8000/api/users');
+        const response = await axios.get('http://localhost:8000/api/users', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+          }
+        });
         this.users = response.data;
       } catch (error) {
         console.error('Failed to fetch users:', error);
