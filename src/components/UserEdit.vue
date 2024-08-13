@@ -1,57 +1,75 @@
 <template>
-    <div>
-      <h2 class="text-2xl font-bold mb-4">Edit User</h2>
-      <form @submit.prevent="updateUser">
-        <div class="mb-4">
-          <label for="name" class="block text-lg">Name</label>
-          <input v-model="name" type="text" id="name" class="border p-2 w-full" required />
-        </div>
-        <div class="mb-4">
-          <label for="email" class="block text-lg">Email</label>
-          <input v-model="email" type="email" id="email" class="border p-2 w-full" required />
-        </div>
-        <div class="mb-4">
-          <label for="password" class="block text-lg">Password</label>
-          <input v-model="password" type="password" id="password" class="border p-2 w-full" />
-        </div>
-        <button type="submit" class="bg-blue-500 text-white p-2 rounded">Update</button>
-      </form>
-    </div>
+    <form @submit.prevent="submitForm" class="space-y-4">
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+        <input
+          id="name"
+          v-model="user.name"
+          type="text"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 sm:text-sm"
+          required
+        />
+      </div>
+      
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          id="email"
+          v-model="user.email"
+          type="email"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 sm:text-sm"
+          required
+        />
+      </div>
+      
+      <div>
+        <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+        <select
+          id="role"
+          v-model="user.role"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 sm:text-sm"
+          required
+        >
+          <option value="admin">Admin</option>
+          <option value="user">User</option>
+        </select>
+      </div>
+      
+      <div class="flex justify-end">
+        <button
+          type="submit"
+          class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          @click="$emit('close')"
+          class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
   </template>
   
   <script>
-  import axios from 'axios';
-  
   export default {
-    data() {
-      return {
-        name: '',
-        email: '',
-        password: ''
-      };
-    },
-    async created() {
-      const userId = this.$route.params.id;
-      const response = await axios.get(`http://localhost:8000/api/users/${userId}`);
-      const user = response.data;
-      this.name = user.name;
-      this.email = user.email;
+    props: {
+      user: {
+        type: Object,
+        required: true
+      }
     },
     methods: {
-      async updateUser() {
-        try {
-          const userId = this.$route.params.id;
-          await axios.put(`http://localhost:8000/api/users/${userId}`, {
-            name: this.name,
-            email: this.email,
-            password: this.password
-          });
-          this.$router.push('/admin/users');
-        } catch (error) {
-          console.error('Error updating user:', error);
-        }
+      async submitForm() {
+        this.$emit('save', this.user);
       }
     }
   };
   </script>
+  
+  <style scoped>
+  /* Add custom styles here if needed */
+  </style>
   

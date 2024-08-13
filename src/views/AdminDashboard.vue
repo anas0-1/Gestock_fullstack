@@ -5,7 +5,13 @@
       <Navbar />
       <div class="p-4">
         <!-- Conditionally render the UserList component based on the view state -->
-        <UserList v-if="view === 'users'" :users="users" />
+        <UserList
+          v-if="view === 'users'"
+          :users="users"
+          @refresh="fetchUsers"
+          @edit="openEditModal"
+          @delete="openDeleteModal"
+        />
       </div>
     </div>
   </div>
@@ -15,7 +21,7 @@
 import Sidebar from '@/components/PageSidebar.vue';
 import Navbar from '@/components/PageNavbar.vue';
 import UserList from '@/components/UserList.vue';
-import axios from 'axios';
+import { getUsers } from '@/services/users';
 
 export default {
   components: {
@@ -27,7 +33,10 @@ export default {
     return {
       username: localStorage.getItem('username') || 'Admin',
       view: 'users', // Default view to 'users'
-      users: [] // To store user data
+      users: [], // To store user data
+      selectedUser: null,
+      isEditModalOpen: false,
+      isDeleteModalOpen: false
     };
   },
   mounted() {
@@ -36,15 +45,18 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await axios.get('http://localhost:8000/api/users', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`
-          }
-        });
-        this.users = response.data;
+        this.users = await getUsers();
       } catch (error) {
         console.error('Failed to fetch users:', error);
       }
+    },
+    openEditModal(user) {
+      this.selectedUser = user;
+      this.isEditModalOpen = true;
+    },
+    openDeleteModal(user) {
+      this.selectedUser = user;
+      this.isDeleteModalOpen = true;
     }
   }
 };
