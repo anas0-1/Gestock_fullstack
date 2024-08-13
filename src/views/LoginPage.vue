@@ -63,44 +63,44 @@ export default {
   },
   methods: {
     async handleLogin() {
-      try {
-        // Send login request
-        const response = await axios.post('http://localhost:8000/api/login', {
-          email: this.email,
-          password: this.password
-        });
+  try {
+    // Send login request
+    const response = await axios.post('http://localhost:8000/api/login', {
+      email: this.email,
+      password: this.password
+    });
 
-        // Store token and user role
-        const { access_token, token_type } = response.data;
-        localStorage.setItem('authToken', access_token);
-        axios.defaults.headers.common['Authorization'] = `${token_type} ${access_token}`;
+    // Extract token from the response
+    const { access_token, token_type } = response.data;
+    localStorage.setItem('authToken', access_token);
+    axios.defaults.headers.common['Authorization'] = `${token_type} ${access_token}`;
 
-        // Fetch user profile using the accessible endpoint
-        const userProfileResponse = await axios.get('http://localhost:8000/api/user');
-        const userProfile = userProfileResponse.data;
+    // Fetch user profile
+    const userProfileResponse = await axios.get('http://localhost:8000/api/user');
+    const userProfile = userProfileResponse.data;
 
-        // Store user role in localStorage
-        localStorage.setItem('userRole', userProfile.role);
+    // Store in localStorage
+    localStorage.setItem('username', userProfile.name); // Store username
+    localStorage.setItem('userRole', userProfile.role); // Store user role
 
-        // Redirect based on role
-        if (userProfile.role === 'admin') {
-          this.$router.push('/admin');
-        } else if (userProfile.role === 'user') {
-          this.$router.push('/user');
-        } else {
-          this.$router.push('/'); // Default redirect if role is unknown
-        }
-
-      } catch (error) {
-        console.error('Login failed:', error.response ? error.response.data.message : error.message);
-        alert('Login failed: ' + (error.response ? error.response.data.message : error.message));
-      }
+    // Redirection based on role
+    if (userProfile.role === 'admin') {
+      this.$router.push('/Admin');
+    } else if (userProfile.role === 'user') {
+      this.$router.push('/User');
+    } else {
+      this.$router.push('/'); 
     }
+
+  } catch (error) {
+    console.error('Login failed:', error.response ? error.response.data.message : error.message);
+    alert('Login failed: ' + (error.response ? error.response.data.message : error.message));
+  }
+}
+
   }
 };
 </script>
-
-
 
 <style scoped>
 .bg-cover {
@@ -111,7 +111,7 @@ export default {
 }
 .custom-border {
   position: relative;
-  overflow: hidden; /* Ensures pseudo-elements do not overflow */
+  overflow: hidden; 
 }
 
 .custom-border::before {
@@ -122,8 +122,8 @@ export default {
   right: 0;
   bottom: 0;
   border: 4px solid rgb(139, 92, 246);
-  border-radius: 1.5rem; /* Adjust to match rounded-3xl */
-  box-sizing: border-box; /* Ensures border thickness is included in dimensions */
+  border-radius: 1.5rem; 
+  box-sizing: border-box; 
   clip-path: polygon(
     0% 0%, 
     0% 77%, 

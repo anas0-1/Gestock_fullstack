@@ -1,22 +1,21 @@
 <template>
     <div>
-      <h2 class="text-2xl font-bold mb-4">User List</h2>
-      <table class="min-w-full bg-white">
-        <thead>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
           <tr>
-            <th class="py-2 px-4 border-b">ID</th>
-            <th class="py-2 px-4 border-b">Name</th>
-            <th class="py-2 px-4 border-b">Email</th>
-            <th class="py-2 px-4 border-b">Actions</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="bg-white divide-y divide-gray-200">
           <tr v-for="user in users" :key="user.id">
-            <td class="py-2 px-4 border-b">{{ user.id }}</td>
-            <td class="py-2 px-4 border-b">{{ user.name }}</td>
-            <td class="py-2 px-4 border-b">{{ user.email }}</td>
-            <td class="py-2 px-4 border-b">
-              <router-link :to="'/admin/users/edit/' + user.id" class="text-blue-500 hover:underline">Edit</router-link>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ user.name }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.email }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.role }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <!-- Add action buttons here if needed -->
             </td>
           </tr>
         </tbody>
@@ -25,18 +24,14 @@
   </template>
   
   <script>
-  import axios from 'axios';
-  
   export default {
-    data() {
-      return {
-        users: []
-      };
-    },
-    async created() {
-      const response = await axios.get('http://localhost:8000/api/users');
-      this.users = response.data;
+    props: {
+      users: Array
     }
   };
   </script>
+  
+  <style scoped>
+  /* Add custom styles here if needed */
+  </style>
   
