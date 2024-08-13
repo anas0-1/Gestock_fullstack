@@ -9,8 +9,8 @@ const routes = [
   { path: '/', component: Login },
   { path: '/register', component: Register },
   { path: '/home', component: Home, meta: { requiresAuth: true } },
-  { path: '/AdminDashboard', component: AdminDashboard, meta: { requiresAuth: true } },
-  { path: '/UserDashboard', component: UserDashboard, meta: { requiresAuth: true } },
+  { path: '/admin', component: AdminDashboard, meta: { requiresAuth: true, requiresAdmin: true } },
+  { path: '/user', component: UserDashboard, meta: { requiresAuth: true } },
 ];
 
 const router = createRouter({
@@ -20,14 +20,17 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem('authToken');
+  const userRole = localStorage.getItem('userRole'); // Retrieve the stored role
 
-  // Redirect to login if route requires authentication and user is not authenticated
   if (to.meta.requiresAuth && !isAuthenticated) {
     return next('/');
   }
 
-    // Allow access if authentication is not required or user is authenticated
-    next();
+  if (to.meta.requiresAdmin && userRole !== 'admin') {
+    return next('/'); // Redirect to a suitable route if not admin
+  }
+
+  next();
 });
 
 export default router;

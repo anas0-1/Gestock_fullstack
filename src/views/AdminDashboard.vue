@@ -1,19 +1,39 @@
 <template>
-    <div class="flex items-center justify-center h-screen bg-gray-100">
-      <div class="bg-white p-8 rounded-lg shadow-lg">
-        <h1 class="text-3xl font-semibold text-center">Welcome Admin!</h1>
-        <p class="text-lg text-center mt-4">You have successfully logged in. This is your admin dashboard.</p>
+  <div class="admin-dashboard flex">
+    <Sidebar :username="username" />
+    <div class="content flex-1">
+      <Navbar />
+      <div class="p-4">
+        <router-view />
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'AdminDashboard',
-  };
-  </script>
-  
-  <style scoped>
-  /* Add any additional styles if needed */
-  </style>
-  
+  </div>
+</template>
+
+<script>
+import Sidebar from '@/components/PageSidebar.vue';
+import Navbar from '@/components/PageNavbar.vue';
+
+export default {
+  components: {
+    Sidebar,
+    Navbar
+  },
+  data() {
+    return {
+      username: 'Admin' // Replace with dynamic username if available
+    };
+  }
+};
+</script>
+
+<style scoped>
+.admin-dashboard {
+  display: flex;
+}
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+</style>

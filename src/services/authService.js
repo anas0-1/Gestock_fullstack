@@ -3,7 +3,7 @@ import axios from './axios';
 const login = async (email, password) => {
   try {
     const response = await axios.post('/login', { email, password });
-    return response.data; // Should include `access_token` and `token_type`
+    return response.data; 
   } catch (error) {
     // Log detailed error for debugging
     console.error('Login error:', error.response ? error.response.data : error.message);

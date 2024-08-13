@@ -62,41 +62,44 @@ export default {
     };
   },
   methods: {
-  async handleLogin() {
-    try {
-      // Send login request
-      const response = await axios.post('http://localhost:8000/api/login', {
-        email: this.email,
-        password: this.password
-      });
+    async handleLogin() {
+      try {
+        // Send login request
+        const response = await axios.post('http://localhost:8000/api/login', {
+          email: this.email,
+          password: this.password
+        });
 
-      // Store token
-      const { access_token, token_type } = response.data;
-      localStorage.setItem('authToken', access_token);
-      axios.defaults.headers.common['Authorization'] = `${token_type} ${access_token}`;
+        // Store token and user role
+        const { access_token, token_type } = response.data;
+        localStorage.setItem('authToken', access_token);
+        axios.defaults.headers.common['Authorization'] = `${token_type} ${access_token}`;
 
-      // Fetch user profile using the accessible endpoint
-      const userProfileResponse = await axios.get('http://localhost:8000/api/user');
-      const userProfile = userProfileResponse.data;
+        // Fetch user profile using the accessible endpoint
+        const userProfileResponse = await axios.get('http://localhost:8000/api/user');
+        const userProfile = userProfileResponse.data;
 
-      // Redirect based on role
-      if (userProfile.role === 'admin') {
-        this.$router.push('/AdminDashboard');
-      } else if (userProfile.role === 'user') {
-        this.$router.push('/UserDashboard');
-      } else {
-        this.$router.push('/'); // Default redirect if role is unknown
+        // Store user role in localStorage
+        localStorage.setItem('userRole', userProfile.role);
+
+        // Redirect based on role
+        if (userProfile.role === 'admin') {
+          this.$router.push('/admin');
+        } else if (userProfile.role === 'user') {
+          this.$router.push('/user');
+        } else {
+          this.$router.push('/'); // Default redirect if role is unknown
+        }
+
+      } catch (error) {
+        console.error('Login failed:', error.response ? error.response.data.message : error.message);
+        alert('Login failed: ' + (error.response ? error.response.data.message : error.message));
       }
-
-    } catch (error) {
-      console.error('Login failed:', error.response ? error.response.data.message : error.message);
-      alert('Login failed: ' + (error.response ? error.response.data.message : error.message));
     }
   }
-}
-
 };
 </script>
+
 
 
 <style scoped>
